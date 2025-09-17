@@ -9,7 +9,7 @@ from .pdf_processor import PDFProcessor
 class RAGService:
     """RAG (Retrieval-Augmented Generation) service for PDF-based question answering."""
     
-    def __init__(self, api_key: str, model_name: str = "gpt-4"):
+    def __init__(self, api_key: str, model_name: str = "gpt-4o-mini"):
         """
         Initialize RAG service with OpenAI API key.
         
@@ -20,11 +20,15 @@ class RAGService:
         self.api_key = api_key
         self.model_name = model_name
         
+        # Set environment variable for the library components
+        import os
+        os.environ["OPENAI_API_KEY"] = api_key
+        
         # Initialize components
-        self.embedding_model = EmbeddingModel(api_key=api_key)
+        self.embedding_model = EmbeddingModel()
         self.vector_db = VectorDatabase(embedding_model=self.embedding_model)
         self.pdf_processor = PDFProcessor()
-        self.chat_model = ChatOpenAI(model_name=model_name, api_key=api_key)
+        self.chat_model = ChatOpenAI(model_name=model_name)
         
         # Store PDF context for reference
         self.pdf_context: Optional[str] = None
