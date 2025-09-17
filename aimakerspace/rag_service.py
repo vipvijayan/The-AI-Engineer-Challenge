@@ -21,10 +21,10 @@ class RAGService:
         self.model_name = model_name
         
         # Initialize components
-        self.embedding_model = EmbeddingModel()
+        self.embedding_model = EmbeddingModel(api_key=api_key)
         self.vector_db = VectorDatabase(embedding_model=self.embedding_model)
         self.pdf_processor = PDFProcessor()
-        self.chat_model = ChatOpenAI(model_name=model_name)
+        self.chat_model = ChatOpenAI(model_name=model_name, api_key=api_key)
         
         # Store PDF context for reference
         self.pdf_context: Optional[str] = None
