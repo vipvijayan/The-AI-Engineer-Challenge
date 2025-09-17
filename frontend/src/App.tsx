@@ -89,12 +89,22 @@ const App: React.FC = () => {
       return;
     }
 
+    console.log('Selected file:', selectedFile);
+    console.log('File type:', selectedFile.type);
+    console.log('File name:', selectedFile.name);
+    console.log('File size:', selectedFile.size);
+
     setUploadStatus('Uploading and processing PDF...');
 
     try {
       const formData = new FormData();
       formData.append('file', selectedFile);
       formData.append('api_key', apiKey);
+
+      console.log('FormData entries:');
+      for (let [key, value] of formData.entries()) {
+        console.log(key, value);
+      }
 
       const res = await fetch('http://localhost:8000/api/upload-pdf', {
         method: 'POST',

@@ -109,11 +109,14 @@ async def upload_pdf(
     
     try:
         # Validate file type
-        if not file.filename.lower().endswith('.pdf'):
+        if not file.filename or not file.filename.lower().endswith('.pdf'):
             raise HTTPException(status_code=400, detail="File must be a PDF")
         
         # Read file content
         file_content = await file.read()
+        
+        if len(file_content) == 0:
+            raise HTTPException(status_code=400, detail="File is empty")
         
         # Initialize RAG service with API key
         rag_service = RAGService(api_key=api_key)
@@ -133,8 +136,13 @@ async def upload_pdf(
             "status": status
         }
         
+    except HTTPException:
+        # Re-raise HTTP exceptions as-is
+        raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        # Log the actual error for debugging
+        print(f"Unexpected error in upload_pdf: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
 @app.post("/api/chat")
 async def chat(request: ChatRequest):
