@@ -41,7 +41,7 @@ const App: React.FC = () => {
     setResponse("Loading...");
 
     try {
-      const endpoint = isPdfUploaded ? '/api/chat' : '/api/legacy-chat';
+      const endpoint = isPdfUploaded ? 'http://localhost:8000/api/chat' : 'http://localhost:8000/api/legacy-chat';
       const body = isPdfUploaded 
         ? JSON.stringify({ message: prompt, api_key: apiKey })
         : JSON.stringify({ prompt, api_key: apiKey });
@@ -96,7 +96,7 @@ const App: React.FC = () => {
       formData.append('file', selectedFile);
       formData.append('api_key', apiKey);
 
-      const res = await fetch('/api/upload-pdf', {
+      const res = await fetch('http://localhost:8000/api/upload-pdf', {
         method: 'POST',
         body: formData,
       });
@@ -120,7 +120,7 @@ const App: React.FC = () => {
 
   const checkStatus = async (): Promise<void> => {
     try {
-      const res = await fetch('/api/status');
+      const res = await fetch('http://localhost:8000/api/status');
       const data: StatusResponse = await res.json();
       
       if (data.status === 'ready') {
