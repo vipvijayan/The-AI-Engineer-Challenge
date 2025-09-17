@@ -102,9 +102,11 @@ const App: React.FC = () => {
       formData.append('api_key', apiKey);
 
       console.log('FormData entries:');
-      for (let [key, value] of formData.entries()) {
+      // Convert FormData to array for debugging
+      const formDataArray = Array.from(formData.entries());
+      formDataArray.forEach(([key, value]) => {
         console.log(key, value);
-      }
+      });
 
       const res = await fetch('http://localhost:8000/api/upload-pdf', {
         method: 'POST',
