@@ -1,0 +1,12 @@
+# Root requirements for Vercel build - mirrors api/requirements.txt
+fastapi==0.115.12
+uvicorn==0.34.2
+openai==1.77.0
+pydantic==2.11.4
+python-multipart==0.0.18
+PyPDF2==3.0.1
+python-dotenv==1.1.0
+numpy>=1.26.0
+httpx==0.28.1
+asgiref==3.9.0
+mangum==0.14.0
