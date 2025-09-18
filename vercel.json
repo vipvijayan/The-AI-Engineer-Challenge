@@ -2,14 +2,21 @@
   "version": 2,
   "builds": [
     {
-      "src": "api/vercel_entry.py",
+      "src": "api/main.py",
       "use": "@vercel/python"
+    },
+    {
+      "src": "frontend/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "build"
+      }
     }
   ],
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "api/vercel_entry.py"
+      "dest": "api/main.py"
     },
     {
       "src": "/(.*)",
@@ -18,7 +25,6 @@
   ],
   "buildCommand": "cd frontend && npm install && npm run build",
   "outputDirectory": "frontend/build",
-  "framework": "create-react-app",
   "env": {
     "PYTHONPATH": "/var/task"
   }

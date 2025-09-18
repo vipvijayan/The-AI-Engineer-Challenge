@@ -36,12 +36,25 @@ const App: React.FC = () => {
   const [isPdfUploaded, setIsPdfUploaded] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  // Determine API base URL based on environment
+  const getApiBaseUrl = () => {
+    if (process.env.NODE_ENV === 'production') {
+      // In production, use the same domain (Vercel will handle routing)
+      return '';
+    } else {
+      // In development, use localhost
+      return 'http://localhost:8000';
+    }
+  };
+
+  const API_BASE_URL = getApiBaseUrl();
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     setResponse("Loading...");
 
     try {
-      const endpoint = isPdfUploaded ? 'http://localhost:8000/api/chat' : 'http://localhost:8000/api/legacy-chat';
+      const endpoint = isPdfUploaded ? `${API_BASE_URL}/api/chat` : `${API_BASE_URL}/api/legacy-chat`;
       const body = isPdfUploaded 
         ? JSON.stringify({ message: prompt, api_key: apiKey })
         : JSON.stringify({ prompt, api_key: apiKey });
@@ -108,7 +121,7 @@ const App: React.FC = () => {
         console.log(key, value);
       });
 
-      const res = await fetch('http://localhost:8000/api/upload-pdf', {
+      const res = await fetch(`${API_BASE_URL}/api/upload-pdf`, {
         method: 'POST',
         body: formData,
       });
@@ -132,7 +145,7 @@ const App: React.FC = () => {
 
   const checkStatus = async (): Promise<void> => {
     try {
-      const res = await fetch('http://localhost:8000/api/status');
+      const res = await fetch(`${API_BASE_URL}/api/status`);
       const data: StatusResponse = await res.json();
       
       if (data.status === 'ready') {
