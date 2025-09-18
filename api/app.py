@@ -73,7 +73,12 @@ import os
 import asyncio
 
 # Add the parent directory to the path to import aimakerspace
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+# Handle both local development and Vercel deployment paths
+current_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(current_dir)
+sys.path.append(parent_dir)
+sys.path.append(current_dir)
+
 from aimakerspace.rag_service import RAGService
 
 app = FastAPI()
