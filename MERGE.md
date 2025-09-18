@@ -1,151 +1,144 @@
-# Merge Instructions for PDF RAG System Feature
+# Vercel Deployment Configuration
 
-This document provides instructions for merging the `feature/pdf-rag-system` branch back to `main`.
-
-## Overview
-This feature adds comprehensive PDF upload and RAG (Retrieval-Augmented Generation) chat functionality to the application, allowing users to upload PDF documents and ask questions about their content using AI.
+This document explains how to deploy the FastAPI RAG application to Vercel and merge the changes back to the main branch.
 
 ## Changes Made
 
-### Backend Changes
-- **New Dependencies**: Added PyPDF2, numpy, and python-dotenv to requirements.txt
-- **New API Endpoints**:
-  - `POST /api/upload-pdf` - Upload and index PDF documents
-  - `POST /api/chat` - Chat with uploaded PDF using RAG
-  - `GET /api/status` - Check PDF indexing status
-  - `POST /api/legacy-chat` - Maintain backward compatibility
-- **New Services**:
-  - `PDFProcessor` - Extract and chunk PDF text content
-  - `RAGService` - Complete RAG pipeline implementation
-  - Enhanced `VectorDatabase` - Vector similarity search
-  - `EmbeddingModel` - OpenAI embeddings integration
+### 1. Vercel Configuration Files
+- **Updated `vercel.json`**: Configured for both FastAPI backend and React frontend deployment
+- **Created `api/vercel_entry.py`**: Entry point for Vercel to serve the FastAPI app
+- **Updated `api/vercel.json`**: Optimized for API-only deployment
+- **Created `.vercelignore`**: Excludes unnecessary files from deployment
 
-### Frontend Changes
-- **Enhanced UI**: Modern, responsive design with clear sections
-- **PDF Upload**: File input with validation and progress indicators
-- **Status Management**: Real-time status checking and display
-- **Dual Mode**: Support for both PDF RAG chat and legacy OpenAI chat
-- **Error Handling**: Comprehensive error messages and user feedback
+### 2. Dependencies
+- **Updated `api/requirements.txt`**: Added `httpx` dependency for better HTTP client support
 
-### Library Structure
-- **aimakerspace/**: New Python library with modular components
-  - `pdf_processor.py` - PDF text extraction and chunking
-  - `rag_service.py` - Complete RAG implementation
-  - `vectordatabase.py` - Vector similarity search
-  - `openai_utils/` - OpenAI API integrations
+## Deployment Instructions
 
-## Merge Options
+### Option 1: Deploy via Vercel CLI
 
-### Option 1: GitHub Pull Request (Recommended)
-1. Push the feature branch to GitHub:
+1. **Install Vercel CLI** (if not already installed):
    ```bash
+   npm i -g vercel
+   ```
+
+2. **Login to Vercel**:
+   ```bash
+   vercel login
+   ```
+
+3. **Deploy from project root**:
+   ```bash
+   cd /Users/vipinvijayan/Developer/projects/AI/AIMakerSpace/code/The-AI-Engineer-Challenge
+   vercel --prod
+   ```
+
+4. **Follow the prompts**:
+   - Link to existing project or create new one
+   - Confirm project settings
+   - Wait for deployment to complete
+
+### Option 2: Deploy via GitHub Integration
+
+1. **Push changes to GitHub**:
+   ```bash
+   git add .
+   git commit -m "Add Vercel deployment configuration"
    git push origin feature/pdf-rag-system
    ```
 
-2. Create a Pull Request on GitHub:
-   - Go to the repository on GitHub
-   - Click "Compare & pull request" for the `feature/pdf-rag-system` branch
-   - Add a descriptive title: "feat: Add PDF upload and RAG chat functionality"
-   - Add detailed description of changes
-   - Request review from team members
-   - Merge after approval
+2. **Create Pull Request**:
+   - Go to GitHub repository
+   - Create PR from `feature/pdf-rag-system` to `main`
+   - Merge the PR
 
-### Option 2: GitHub CLI (Alternative)
-1. Push the feature branch:
+3. **Connect to Vercel**:
+   - Go to [vercel.com](https://vercel.com)
+   - Import project from GitHub
+   - Select the repository
+   - Vercel will auto-detect the configuration
+
+## API Endpoints
+
+Once deployed, your API will be available at:
+- `https://your-app.vercel.app/api/health` - Health check
+- `https://your-app.vercel.app/api/upload-pdf` - Upload PDF for RAG
+- `https://your-app.vercel.app/api/chat` - Chat with uploaded PDF
+- `https://your-app.vercel.app/api/status` - Get RAG service status
+- `https://your-app.vercel.app/api/legacy-chat` - Legacy chat endpoint
+
+## Environment Variables
+
+Make sure to set the following environment variables in Vercel dashboard:
+- `OPENAI_API_KEY` (if you want to use a default API key)
+- Any other environment variables your app needs
+
+## Testing the Deployment
+
+1. **Health Check**:
    ```bash
-   git push origin feature/pdf-rag-system
+   curl https://your-app.vercel.app/api/health
    ```
 
-2. Create and merge PR using GitHub CLI:
+2. **Upload PDF**:
    ```bash
-   # Create pull request
-   gh pr create --title "feat: Add PDF upload and RAG chat functionality" --body "Add comprehensive PDF upload and RAG chat functionality with modern UI and robust error handling"
-   
-   # Review the PR (optional)
-   gh pr view
-   
-   # Merge the PR
-   gh pr merge --merge --delete-branch
+   curl -X POST https://your-app.vercel.app/api/upload-pdf \
+     -F "file=@your-document.pdf" \
+     -F "api_key=your-openai-api-key"
    ```
 
-3. Switch back to main and pull changes:
+3. **Chat with PDF**:
    ```bash
-   git checkout main
-   git pull origin main
+   curl -X POST https://your-app.vercel.app/api/chat \
+     -H "Content-Type: application/json" \
+     -d '{"message": "What is this document about?", "api_key": "your-openai-api-key"}'
    ```
 
-## Post-Merge Steps
+## Merge Instructions
 
-1. **Install Dependencies**:
-   ```bash
-   cd api
-   source venv/bin/activate
-   pip install -r requirements.txt
-   ```
+### GitHub PR Route:
+1. Create a pull request from `feature/pdf-rag-system` to `main`
+2. Review the changes
+3. Merge the pull request
+4. Delete the feature branch after merging
 
-2. **Test the Application**:
-   ```bash
-   # Start backend
-   cd api
-   source venv/bin/activate
-   uvicorn app:app --host 0.0.0.0 --port 8000 --reload
-   
-   # Start frontend (in another terminal)
-   cd frontend
-   npm start
-   ```
+### GitHub CLI Route:
+```bash
+# Switch to main branch
+git checkout main
 
-3. **Verify Functionality**:
-   - Upload a PDF document
-   - Ask questions about the PDF content
-   - Verify responses are based on PDF content only
-   - Test error handling with invalid files
+# Pull latest changes
+git pull origin main
 
-## Key Features Added
+# Merge feature branch
+git merge feature/pdf-rag-system
 
-- **PDF Processing**: Extract text from PDF files using PyPDF2
-- **Text Chunking**: Split large documents into manageable chunks
-- **Vector Embeddings**: Create embeddings using OpenAI's text-embedding-3-small
-- **Similarity Search**: Find relevant content using cosine similarity
-- **Context-Aware Responses**: Generate answers based only on PDF content
-- **Modern UI**: Clean, responsive interface with status indicators
-- **Error Handling**: Comprehensive error messages and validation
-- **Backward Compatibility**: Legacy chat functionality preserved
+# Push changes
+git push origin main
 
-## Testing Recommendations
+# Delete feature branch
+git branch -d feature/pdf-rag-system
+git push origin --delete feature/pdf-rag-system
+```
 
-1. **PDF Upload Testing**:
-   - Test with various PDF sizes and formats
-   - Verify error handling for non-PDF files
-   - Test with corrupted or invalid PDFs
+## Troubleshooting
 
-2. **RAG Functionality Testing**:
-   - Ask questions that should be answerable from the PDF
-   - Ask questions that cannot be answered from the PDF
-   - Test with different types of questions (factual, analytical, etc.)
+### Common Issues:
 
-3. **UI/UX Testing**:
-   - Test on different screen sizes
-   - Verify status indicators work correctly
-   - Test error message display
+1. **Import Errors**: Make sure all dependencies are in `requirements.txt`
+2. **Path Issues**: The `vercel_entry.py` file handles the import path correctly
+3. **CORS Issues**: CORS is configured to allow all origins for development
+4. **File Upload Issues**: Ensure `python-multipart` is in requirements
 
-## Rollback Plan
+### Debugging:
+- Check Vercel function logs in the dashboard
+- Use the `/api/health` endpoint to verify the app is running
+- Test locally with `uvicorn api.app:app --reload` before deploying
 
-If issues arise after merge:
-1. Revert the merge commit:
-   ```bash
-   git revert -m 1 <merge-commit-hash>
-   ```
-2. Or reset to previous main:
-   ```bash
-   git reset --hard HEAD~1
-   git push origin main --force
-   ```
+## Next Steps
 
-## Dependencies Added
-
-- `PyPDF2==3.0.1` - PDF text extraction
-- `numpy>=1.26.0` - Numerical operations for vector similarity
-- `python-dotenv==1.1.0` - Environment variable management
-
-All dependencies are production-ready and well-maintained.
+After successful deployment:
+1. Update your frontend to use the new Vercel API endpoints
+2. Configure custom domain if needed
+3. Set up monitoring and logging
+4. Consider adding authentication for production use

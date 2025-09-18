@@ -1,9 +1,25 @@
 {
-  "rewrites": [
-    { "source": "/api/(.*)", "destination": "/api/app.py" },
-    { "source": "/(.*)", "destination": "/frontend/$1" }
+  "version": 2,
+  "builds": [
+    {
+      "src": "api/vercel_entry.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "api/vercel_entry.py"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "frontend/$1"
+    }
   ],
   "buildCommand": "cd frontend && npm install && npm run build",
   "outputDirectory": "frontend/build",
-  "framework": "create-react-app"
+  "framework": "create-react-app",
+  "env": {
+    "PYTHONPATH": "/var/task"
+  }
 }

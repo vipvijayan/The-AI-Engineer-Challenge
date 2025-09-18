@@ -1,0 +1,35 @@
+# Ignore virtual environment
+api/venv/
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+**/*.pyd
+**/.Python
+**/env/
+**/venv/
+**/ENV/
+**/env.bak/
+**/venv.bak/
+
+# Ignore development files
+*.log
+*.tmp
+.DS_Store
+.vscode/
+.idea/
+
+# Ignore test files
+test.txt
+*.test.py
+tests/
+
+# Ignore documentation
+*.md
+!README.md
+
+# Ignore git
+.git/
+.gitignore
+
+# Ignore node_modules (handled by build process)
+node_modules/
