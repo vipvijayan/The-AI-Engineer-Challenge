@@ -27,6 +27,28 @@ tests/
 *.md
 !README.md
 
+# Exclude local virtualenvs and pip caches
+api/venv/
+api/.venv/
+venv/
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+**/*.pyd
+
+# Exclude alternative API implementations and backups so they are not uploaded as functions
+api/index_node.js
+api/simple_api.py
+api/app.py
+api/simple_app.py
+api/test.py
+api/package.json
+api/.vercel
+
+# Keep only the primary server file(s) we want deployed
+!api/main.py
+!api/vercel_entry.py
+
 # Ignore git
 .git/
 .gitignore
