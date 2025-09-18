@@ -2,10 +2,6 @@
   "version": 2,
   "builds": [
     {
-      "src": "api/main.py",
-      "use": "@vercel/python"
-    },
-    {
       "src": "frontend/package.json",
       "use": "@vercel/static-build",
       "config": {
@@ -15,17 +11,10 @@
   ],
   "routes": [
     {
-      "src": "/api/(.*)",
-      "dest": "api/main.py"
-    },
-    {
       "src": "/(.*)",
       "dest": "frontend/$1"
     }
   ],
   "buildCommand": "cd frontend && npm install && npm run build",
-  "outputDirectory": "frontend/build",
-  "env": {
-    "PYTHONPATH": "/var/task"
-  }
+  "outputDirectory": "frontend/build"
 }

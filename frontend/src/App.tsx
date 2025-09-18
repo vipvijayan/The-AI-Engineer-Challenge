@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent, FormEvent, useRef } from 'react';
+import React, { useState, ChangeEvent, FormEvent, useRef, useCallback, useEffect } from 'react';
 
 interface ChatResponse {
   response?: string;
@@ -143,7 +143,7 @@ const App: React.FC = () => {
     }
   };
 
-  const checkStatus = async (): Promise<void> => {
+  const checkStatus = useCallback(async (): Promise<void> => {
     try {
       const res = await fetch(`${API_BASE_URL}/api/status`);
       const data: StatusResponse = await res.json();
@@ -158,15 +158,15 @@ const App: React.FC = () => {
     } catch (error) {
       console.error('Error checking status:', error);
     }
-  };
+  }, [API_BASE_URL]);
 
   const handlePromptChange = (e: ChangeEvent<HTMLTextAreaElement>) => setPrompt(e.target.value);
   const handleApiKeyChange = (e: ChangeEvent<HTMLInputElement>) => setApiKey(e.target.value);
 
   // Check status on component mount
-  React.useEffect(() => {
+  useEffect(() => {
     checkStatus();
-  }, []);
+  }, [checkStatus]);
 
   return (
     <div style={{ padding: '2rem', fontFamily: 'sans-serif', maxWidth: '800px', margin: '0 auto' }}>
